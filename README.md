@@ -15,6 +15,16 @@ CREATE TABLE Clients (
     Preferences TEXT
 );
 
+-- Create the Properties table
+CREATE TABLE Properties (
+    PropertyID INT PRIMARY KEY,
+    Address VARCHAR(255) NOT NULL,
+    Type VARCHAR(50) NOT NULL,
+    Price DECIMAL(10,2) NOT NULL,
+    AgentID INT NOT NULL,
+    FOREIGN KEY (AgentID) REFERENCES Agents(AgentID) ON DELETE CASCADE
+);
+
 -- Create the Transactions table
 CREATE TABLE Transactions (
     TransactionID INT PRIMARY KEY,
@@ -27,14 +37,4 @@ CREATE TABLE Transactions (
     FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID) ON DELETE CASCADE,
     FOREIGN KEY (AgentID) REFERENCES Agents(AgentID) ON DELETE CASCADE,
     FOREIGN KEY (ClientID) REFERENCES Clients(ClientID) ON DELETE CASCADE
-);
-
--- Create the Properties table
-CREATE TABLE Properties (
-    PropertyID INT PRIMARY KEY,
-    Address VARCHAR(255) NOT NULL,
-    Type VARCHAR(50) NOT NULL,
-    Price DECIMAL(10,2) NOT NULL,
-    AgentID INT NOT NULL,
-    FOREIGN KEY (AgentID) REFERENCES Agents(AgentID) ON DELETE CASCADE
 );
