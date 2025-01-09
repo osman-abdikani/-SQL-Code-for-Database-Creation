@@ -1,43 +1,40 @@
-CREATE TABLE Locations (
-    LocationID INT PRIMARY KEY AUTO_INCREMENT,
-    City VARCHAR(100),
-    State VARCHAR(100),
-    Country VARCHAR(100)
+-- Create the Agents table
+CREATE TABLE Agents (
+    AgentID INT PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    ContactNumber VARCHAR(15) UNIQUE NOT NULL,
+    CommissionRate DECIMAL(5,2) CHECK (CommissionRate > 0)
 );
 
-CREATE TABLE Patients (
-    PatientID INT PRIMARY KEY AUTO_INCREMENT,
-    FirstName VARCHAR(50),
-    LastName VARCHAR(50),
-    DateOfBirth DATE,
-    Gender VARCHAR(10),
-    PhoneNumber VARCHAR(15),
-    LocationID INT,
-    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
+-- Create the Clients table
+CREATE TABLE Clients (
+    ClientID INT PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    ContactNumber VARCHAR(15) UNIQUE NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    Preferences TEXT
 );
 
-CREATE TABLE Facilities (
-    FacilityID INT PRIMARY KEY AUTO_INCREMENT,
-    FacilityName VARCHAR(100),
-    Address VARCHAR(255),
-    PhoneNumber VARCHAR(15)
+-- Create the Transactions table
+CREATE TABLE Transactions (
+    TransactionID INT PRIMARY KEY,
+    PropertyID INT NOT NULL,
+    AgentID INT NOT NULL,
+    ClientID INT NOT NULL,
+    TransactionType VARCHAR(10) CHECK (TransactionType IN ('Buy', 'Sell', 'Rent')),
+    Date DATE NOT NULL,
+    Amount DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID) ON DELETE CASCADE,
+    FOREIGN KEY (AgentID) REFERENCES Agents(AgentID) ON DELETE CASCADE,
+    FOREIGN KEY (ClientID) REFERENCES Clients(ClientID) ON DELETE CASCADE
 );
 
-CREATE TABLE Visits (
-    VisitID INT PRIMARY KEY AUTO_INCREMENT,
-    PatientID INT,
-    FacilityID INT,
-    VisitDate DATE,
-    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
-    FOREIGN KEY (FacilityID) REFERENCES Facilities(FacilityID)
-);
-
-CREATE TABLE GitHubRepositories (
-    RepoID INT PRIMARY KEY AUTO_INCREMENT,
-    PatientID INT,
-    RepoName VARCHAR(255) NOT NULL,
-    RepoURL VARCHAR(2083) NOT NULL,
-    Description TEXT,
-    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID)
+-- Create the Properties table
+CREATE TABLE Properties (
+    PropertyID INT PRIMARY KEY,
+    Address VARCHAR(255) NOT NULL,
+    Type VARCHAR(50) NOT NULL,
+    Price DECIMAL(10,2) NOT NULL,
+    AgentID INT NOT NULL,
+    FOREIGN KEY (AgentID) REFERENCES Agents(AgentID) ON DELETE CASCADE
 );
